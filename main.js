@@ -63,6 +63,20 @@
 let todos = [];
 let completeTask = [];
 
+//Funciones de estilos para los botones
+function buttonStyles(color) {
+  //Objeto con las claves de los colores disponibles
+  const opciones = {
+    green: "bg-green-600",
+    yellow: "bg-yellow-600",
+    red: "bg-red-600",
+  };
+
+  let styles = `${opciones[color]} cursor-pointer p-2 rounded-md`;
+
+  return styles;
+}
+
 //Clase para representar a todo item
 class Todo {
   constructor(id, text) {
@@ -76,14 +90,47 @@ class Todo {
   }
 
   buildTodo() {
+    //Crea un elemento li
     const todoItem = document.createElement("li");
 
+    // Accede a su propiedad id en HTML y le asigna el id de la instancia en cuestion
     todoItem.id = `todo-${this.id}`;
-    todoItem.innerHTML = `
-    ${this.text}
-    <button id="completeBtn" class="cursor-pointer" onClick="markTodoAsComplete(${this.id})">Completar</button>
-    <button id="updateBtn" class="cursor-pointer">Editar</button>
-    <button id="deleteBtn" class="cursor-pointer">Eliminar</button>
+
+    // Le agrega estilos al todoItem, que es un li
+    todoItem.className =
+      "flex justify-between border-b pb-1.5 border-b-cyan-50/20 ";
+
+    // Dentro de la etiqueta li, crea el texto y los botones
+    // La funcion buttonStyles le asigna estilos a los botones para evitar repetir codigo
+    todoItem.innerHTML = this.completed
+      ? `${this.text}
+        <div class="flex gap-1.5">
+          <button
+          id="deleteBtn"
+          class="${buttonStyles("red")}"
+          onClick="deleteTodo(${this.id}, 'complete')">
+            Eliminar
+          </button>
+        </div>
+      `
+      : // NO ESTAN COMPLETADAS
+        `
+    ${this.text} 
+    <div class="flex gap-1.5">
+      <button
+        id="completeBtn"
+        class="${buttonStyles("green")}" 
+        onClick="markTodoAsComplete(${this.id})">
+          Completar
+      </button>
+      <button id="updateBtn" class="${buttonStyles("yellow")}">Editar</button>
+      <button 
+      id="deleteBtn" 
+      class="${buttonStyles("red")}"
+      onClick="deleteTodo(${this.id}, 'todos')">
+        Eliminar
+      </button>
+    </div>
     `;
 
     return todoItem;
@@ -99,10 +146,19 @@ const completeTodoList = document.getElementById("complete-todo-list");
 // Obtiene la informacion del array y la renderiza
 const renderTodos = () => {
   todoList.innerHTML = "";
+  completeTodoList.innerHTML = "";
   for (const todo of todos) {
+    // Por cada instancia en la lista, ejecuta su metodo buildTodo() para crear el HTML
     const todoItem = todo.buildTodo();
 
+    // Cada todoItem creado lo pone dentro ul contenedor de tareas
     todoList.appendChild(todoItem);
+  }
+
+  for (const complete of completeTask) {
+    const completeItem = complete.buildTodo();
+
+    completeTodoList.append(completeItem);
   }
 };
 
@@ -116,8 +172,10 @@ const createTodo = () => {
 
   let id = todos.length + 1;
 
+  //Agrega a la lista una instancia de la clase Todo
   todos.push(new Todo(id, todoText));
-  console.log(todos);
+
+  // console.log(todos); muestra lo que hay en la lista de todos
 
   renderTodos();
 
@@ -125,32 +183,38 @@ const createTodo = () => {
 };
 
 const markTodoAsComplete = (id) => {
-  // for (const t of todos) {
-  //   if (t.id === id) {
-  //     t.markAsComplete();
-  //     todoList = todoList.slice();
-  //   }
-  // }
-
+  // Busca en la lista todos el id que sea igual al id de la instancia
   let todo = todos.find((todo) => todo.id === id);
+
+  // Cuando lo encuentre se ejecuta su metodo markAsComplete()
   if (todo) {
     todo.markAsComplete();
   }
 
+  // En la lista de tareas completadas, mete la tarea que se acaba de completar
   completeTask.push(todo);
-  deleteTodo(id);
+
+  // Borra de la lista de tareas pendientes a la tarea completada
+  deleteTodo(id, "todos");
+
+  // Renderiza todo nuevamente
   renderTodos();
 };
 
 const updateTodo = (id) => {};
 
-const deleteTodo = (id) => {
-  todos = todos.filter((todo) => todo.id !== id);
-  renderTodos();
-  console.log(`todos`);
-  console.log(todos);
-  console.log(`completes`);
-  console.log(completeTask);
+const deleteTodo = (id, target) => {
+  if (target === "todos") {
+    // apunta a la lista todos, y modifica la lista con todos los id, menos el que se pasa por parametro
+    todos = todos.filter((todo) => todo.id !== id);
+
+    // Renderiza las tareas nuevamente
+    renderTodos();
+  } else if (target === "complete") {
+    completeTask = completeTask.filter((complete) => complete.id !== id);
+
+    renderTodos();
+  }
 };
 
 addToDoBtn.addEventListener("click", function name(e) {

@@ -5,28 +5,60 @@
     <link rel="stylesheet" href="./src/output.css" />
     <title>To-Do List</title>
   </head>
-  <body class="bg-cyan-900 text-white">
-    <h1 class="mb-5">To-Do List</h1>
-    <form id="todo-form" class="flex flex-col gap-1.5">
-      <div>
+  <body class="bg-cyan-900 text-white p-5">
+    <h1 class="mb-5 text-3xl font-semibold">To-Do List</h1>
+    <form id="todo-form" class="">
+      <div class="flex gap-2.5">
         <input
           type="text"
           id="new-todo"
           placeholder="Add a new task"
-          class="bg-blue-800/30 border border-blue-400 ring-0 p-2"
+          class="bg-white/90 text-black border border-transparent outline-none p-2 rounded-md focus:border-blue-300"
         />
         <button
           type="submit"
           id="add-todo"
-          class="bg-red-800/30 cursor-pointer p-2"
+          class="bg-slate-900/80 cursor-pointer p-2 rounded-md"
         >
           Add
         </button>
       </div>
     </form>
-    <ul id="todo-list"></ul>
+    <ul
+      id="todo-list"
+      class="flex flex-col gap-6 mt-5 bg-cyan-950 w-10/12 max-w-250 px-4 py-2.5 rounded-md"
+    >
+      <!-- <li class="flex justify-between border-b pb-1.5 border-b-cyan-50/20">
+        tarea 1
+        <div class="flex gap-1.5">
+          <button>Completar</button> <button>Editar</button>
+          <button>Eliminar</button>
+        </div>
+      </li>
 
-    <ul id="complete-todo-list"></ul>
+      <li class="flex justify-between border-b pb-1.5 border-b-cyan-50/20">
+        tarea 2
+
+        <div class="flex gap-1.5">
+          <button>Completar</button> <button>Editar</button>
+          <button>Eliminar</button>
+        </div>
+      </li>
+
+      <li class="flex justify-between border-b pb-1.5 border-b-cyan-50/20">
+        tarea 3
+
+        <div class="flex gap-1.5">
+          <button>Completar</button> <button>Editar</button>
+          <button>Eliminar</button>
+        </div>
+      </li> -->
+    </ul>
+
+    <ul
+      id="complete-todo-list"
+      class="flex flex-col gap-6 mt-5 bg-cyan-950 w-10/12 max-w-250 px-4 py-2.5 rounded-md"
+    ></ul>
 
     <script src="/main.js"></script>
   </body>
