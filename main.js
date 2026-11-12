@@ -103,7 +103,7 @@ class Todo {
     // Dentro de la etiqueta li, crea el texto y los botones
     // La funcion buttonStyles le asigna estilos a los botones para evitar repetir codigo
     todoItem.innerHTML = this.completed
-      ? `${this.text}
+      ? `<span class="line-through">${this.text}</span>
         <div class="flex gap-1.5">
           <button
           id="deleteBtn"
@@ -123,7 +123,10 @@ class Todo {
         onClick="markTodoAsComplete(${this.id})">
           Completar
       </button>
-      <button id="updateBtn" class="${buttonStyles("yellow")}">Editar</button>
+      <button
+        id="updateBtn"
+        class="${buttonStyles("yellow")}"
+        onClick="updateTodo(${this.id})">Editar</button>
       <button 
       id="deleteBtn" 
       class="${buttonStyles("red")}"
@@ -201,7 +204,17 @@ const markTodoAsComplete = (id) => {
   renderTodos();
 };
 
-const updateTodo = (id) => {};
+const updateTodo = (id) => {
+  let todo = todos.find((todo) => todo.id === id);
+
+  if (todo) {
+    const newText = prompt("Actualizar la tarea", todo.text);
+    if (newText !== null && newText !== "") {
+      todo.text = newText;
+      renderTodos();
+    }
+  }
+};
 
 const deleteTodo = (id, target) => {
   if (target === "todos") {
@@ -211,6 +224,7 @@ const deleteTodo = (id, target) => {
     // Renderiza las tareas nuevamente
     renderTodos();
   } else if (target === "complete") {
+    // apunta a la lista completeTask, y modifica la lista con todos los id, menos el que se pasa por parametro
     completeTask = completeTask.filter((complete) => complete.id !== id);
 
     renderTodos();
